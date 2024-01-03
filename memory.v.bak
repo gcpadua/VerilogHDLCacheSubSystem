@@ -1,0 +1,26 @@
+module memoria(
+	input [ADDRESS_SIZE-1:0] address;
+	input clock;
+	input [WORD_SIZE-1:0] data,
+	input wren,
+	output reg [WORD_SIZE-1:0] q
+);
+
+	parameter ADDRESS_SIZE = 7;
+	parameter WORD_SIZE = 4;
+	
+	reg [WORD_SIZE-1:0] mem[2**ADDRESS_SIZE-1:0];
+	
+	initial begin
+		$readmemb("init.mif", mem);
+	end
+	
+	always @(posedge clock) begin
+		q = mem[address];
+	end
+	
+	always@(negedge clock) begin
+		if(wren == 1) mem[address] = data;
+	end
+
+endmodule
